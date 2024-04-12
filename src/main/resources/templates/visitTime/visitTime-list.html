@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='visitTime')"/>
+<!-- верстка с использованием bootstrap -->
+<div class="container-fluid text-center">
+    <!-- заголовок страницы -->
+    <h1>Расписание работы врачей</h1>
+
+    <!-- вывод сообщения success/danger message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+    <!-- форма для фильтрации врачей -->
+    <div class="container-sm align-content-center text-center m-1">
+        <form method="get" th:action="@{/visitTime}" class="row col-sm-12" th:object="${filter}">
+            <label class="col-sm-2 col-form-label" for="doctor">Врач: </label>
+            <div class="col-sm-4">
+                <input class="form-control" type="text" id="doctor" th:field="*{doctor}"/>
+            </div>
+
+            <!-- кнопка отправки формы -->
+            <div class="col-sm-2">
+                <button class="btn btn-success form-control">Поиск</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- вывод списка отделений через цикл (используется таблица-->
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Дата приема</th>
+            <th>Время приема</th>
+            <th>Врач</th>
+            <th>Специализация</th>
+            <th>Пациент</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="visitTime: ${visitTimes}">
+            <td>[[${visitTime.id}]]</td>
+            <td>[[${visitTime.day}]]</td>
+            <td>[[${visitTime.time}]]</td>
+            <td>[[${visitTime.getDoctor().getName()}]]</td>
+            <td>[[${visitTime.getDoctor().getSpecialization()}]]</td>
+            <td th:if="${visitTime.getPatient()!=null}">[[${visitTime.getPatient().getName()}]]</td>
+            <td th:if="${visitTime.getPatient()==null}">-</td>
+           <!-- ячейка действия -->
+            <td>
+                <a th:href="@{'/visitTime/delete/' + ${visitTime.id}}" class="btn btn-danger">Удалить</a>
+                <a th:href="@{'/visitTime/update/' + ${visitTime.id}}" class="btn btn-primary">Редактировать</a>
+                <!--<a th:href="@{'/visitTime/' + ${visitTime.id}}" class="btn btn-success">Просмотр</a>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="btn btn-success form-control" th:href="@{/visitTime/new}">Добавить новую запись</a>
+    <h4><a th:href="@{/}">На главную</a> </h4>
+</div>
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+
+</body>
+</html>

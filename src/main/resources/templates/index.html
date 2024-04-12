@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+    <!-- вставка фрагмента шапки -->
+    <th:block th:replace="layout/page-layout.html :: page-header(page='index')"/>
+    <h1>Добро пожаловать в приложение "Dental Clinic"!</h1>
+
+    <!-- вывод сообщения success/danger message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+
+    <!-- обращение к статичному изображению -->
+    <img th:src="@{/image/picture.jpg}">
+    <img th:src="@{/image/picture2.png}">
+
+
+    <div sec:authorize="!isAuthenticated()" class="m-lg-3 row">
+        <div class="col-sm-2">
+        <a class="btn btn-success form-control" th:href="@{/feedbackForm/new}">Записаться на приём</a>
+        </div>
+    </div>
+
+
+<!-- вставка фрагмента футера -->
+    <th:block th:replace="layout/page-layout.html :: page-footer"/>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='visitTime')"/>
+<!-- верстка с использованием bootstrap -->
+<div class="container-fluid text-center">
+  <h1>Добавление времени приема у врача</h1>
+
+  <div class="container-sm align-content-center text-center">
+    <form method="post" th:action="@{/visitTime/new}" th:object="${visitTime}">
+      <!-- Дата приема -->
+      <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label" for="day">Дата приема: </label>
+        <div class="col-sm-10">
+          <input class="form-control" type="date" id="day" th:field="*{day}"/>
+        </div>
+      </div>
+
+      <!-- Время приема -->
+      <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label" for="time">Время приема: </label>
+        <div class="col-sm-10">
+          <input class="form-control" type="time" id="time" th:field="*{time}"/>
+        </div>
+      </div>
+
+      <!-- Выбор врача, которому добавляется время приема -->
+      <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label" for="doctor">Врач: </label>
+        <div class="col-sm-10">
+          <select class="form-select" id="doctor" th:field="*{doctor}">
+            <option th:each="doctor: ${doctors}" th:value="${doctor.id}">
+              [[${doctor}]]
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Выбор пациента -->
+      <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label" for="patient">Пациент: </label>
+        <div class="col-sm-10">
+          <select class="form-select" id="patient" th:field="*{patient}">
+            <option th:value="${null}">без пациента</option>
+            <option th:each="patient: ${patients}" th:value="${patient.id}">
+              [[${patient}]]
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- кнопка отправки формы -->
+      <div class="mb-3 row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-5">
+          <button class="btn btn-success form-control">Сохранить</button>
+        </div>
+        <div class="col-sm-5">
+          <a class="btn btn-danger form-control" th:href="@{/visitTime}">Отменить</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+
+
+</body>
+</html>

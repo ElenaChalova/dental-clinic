@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='department')"/>
+<!-- верстка с использованием bootstrap -->
+<div class="container-fluid text-center">
+    <!-- заголовок страницы -->
+    <h1>Отделения "Dental Clinic"</h1>
+
+    <!-- вывод сообщения success/danger message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+    <!-- вывод списка отделений через цикл (используется таблица-->
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Адрес филиала</th>
+            <th>Контактный номер</th>
+            <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Действия</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="department: ${departments}">
+            <td>[[${department.id}]]</td>
+            <td>
+                <a th:href="@{'/department/'+${department.id}}">[[${department.name}]]</a>
+            </td>
+            <td>[[${department.address}]]</td>
+            <td>[[${department.phoneNumber}]]</td>
+            <!-- ячейка действия -->
+            <td sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
+                <a th:href="@{'/department/delete/' + ${department.id}}" class="btn btn-danger">Удалить</a>
+                <a th:href="@{'/department/update/' + ${department.id}}" class="btn btn-primary">Редактировать</a>
+                <!--<a th:href="@{'/department/' + ${department.id}}" class="btn btn-success">Просмотр</a>-->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" class="btn btn-success form-control" th:href="@{/department/new}">Добавить новое отделение</a>
+    <h4><a th:href="@{/}">На главную</a> </h4>
+</div>
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+
+</body>
+</html>

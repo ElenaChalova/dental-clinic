@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='feedbackForm')"/>
+<!-- верстка с использованием bootstrap -->
+<div class="container-fluid text-center">
+    <!-- заголовок страницы -->
+    <h1>Запись на приём</h1>
+
+    <!-- вывод сообщения success/danger message -->
+    <th:block th:replace="layout/page-layout.html :: page-message"/>
+
+    <!-- вывод списка отделений через цикл (используется таблица-->
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>ФИО пациента</th>
+            <th>Дата рождения пациента</th>
+            <th>Номер телефона пациента</th>
+            <th>Отделение</th>
+            <th>Врач</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="feedbackForm: ${feedbackForms}">
+            <td>[[${feedbackForm.id}]]</td>
+            <td>[[${feedbackForm.name}]]</td>
+            <td>[[${feedbackForm.dateBirth}]]</td>
+            <td>[[${feedbackForm.phoneNumber}]]</td>
+            <td th:if="${feedbackForm.getDepartment()!=null}">[[${feedbackForm.getDepartment().getName()}]]</td>
+            <td th:if="${feedbackForm.getDepartment()==null}">-</td>
+            <td th:if="${feedbackForm.getDoctor()!=null}">[[${feedbackForm.getDoctor().getName()}]]</td>
+            <td th:if="${feedbackForm.getDoctor()==null}">-</td>
+            <!-- ячейка действия -->
+            <td>
+                <!-- <a th:href="@{'/patient/new/'}" class="btn btn-primary">Добавить</a>-->
+                <a th:href="@{'/feedbackForm/delete/' + ${feedbackForm.id}}" class="btn btn-danger">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h4><a th:href="@{/}">На главную</a> </h4>
+</div>
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+
+</body>
+</html>

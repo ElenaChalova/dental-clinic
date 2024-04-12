@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:insert="layout/page-layout.html :: page-head"></head>
+<body>
+<!-- вставка фрагмента шапки -->
+<th:block th:replace="layout/page-layout.html :: page-header(page='department')"/>
+<div class="container-fluid text-center">
+    <h1>Информация об отделении</h1>
+    <p>[[${department}]]</p>
+
+    <!-- <form method="post" th:action="@{/medicalServ/new}" th:object="${medicalServ}">-->
+        <!-- Название медицинской услуги -->
+    <!-- <div class="mb-3 row">
+        <label class="col-sm-2 col-form-label" for="name">Название: </label>
+        <div class="col-sm-10">
+            <input class="form-control" type="text" id="name" required minlength="1" th:field="*{name}"/>
+        </div>
+    </div>-->
+
+    <!-- Цена услуги -->
+    <!-- <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label" for="price">Цена услуги: </label>
+            <div class="col-sm-10">
+                <input class="form-control" type="number" id="price" required step="any" th:field="*{price}"/>
+            </div>
+        </div>-->
+
+        <!-- Задано оделение, в которое добавляется услуга -->
+    <!-- <input th:field="*{department}" hidden/>-->
+
+        <!-- кнопка отправки формы -->
+    <!-- <div class="mb-3 row">
+         <div class="col-sm-1"></div>
+         <div class="col-sm-3">
+             <button class="btn btn-success form-control">Добавить услугу</button>
+         </div>
+     </div>
+ </form>-->
+
+ <h2>Наши услуги</h2>
+ <table class="table table-bordered">
+     <!-- шапка таблицы -->
+        <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Цена услуги</th>
+            <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Действие</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="medicalServ: ${department.medicalServSet}">
+            <td>[[${medicalServ.id}]]</td>
+            <td>[[${medicalServ.name}]]</td>
+            <td>[[${medicalServ.price}]] &#8381</td>
+            <td sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
+                <a th:href="@{'/medicalServ/delete/' + ${medicalServ.getId()}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg></a>
+                <a th:href="@{'/medicalServ/update/' + ${medicalServ.getId()}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5
+                    3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                </svg></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" th:href="@{'/medicalServ/new/' + ${department.id}}">Добавить новую услугу</a>
+
+    <h2>Врачи</h2>
+    <table class="table table-bordered">
+        <!-- шапка таблицы -->
+        <thead class="table-info">
+        <tr>
+            <th>ID</th>
+            <th>ФИО</th>
+            <th>Специализация</th>
+            <th>Стаж работы</th>
+            <th sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">Действие</th>
+        </tr>
+        </thead>
+        <!-- тело таблицы -->
+        <tbody>
+        <tr th:each="doctor: ${department.doctorSet}">
+            <td>[[${doctor.id}]]</td>
+            <td>[[${doctor.name}]]</td>
+            <td>[[${doctor.specialization}]]</td>
+            <td>[[${doctor.experience}]]</td>
+            <td sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')">
+                <a th:href="@{'/doctor/delete/' + ${doctor.getId()}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                </svg></a>
+                <a th:href="@{'/doctor/update/' + ${doctor.getId()}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5
+                    3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                </svg></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN')" th:href="@{'/doctor/new/' + ${department.id}}">Добавить врача</a>
+    <a th:href="@{/department}">Вернуться к списку отделений</a>
+</div>
+<!-- вставка фрагмента футера -->
+<th:block th:replace="layout/page-layout.html :: page-footer"/>
+
+</body>
+</html>

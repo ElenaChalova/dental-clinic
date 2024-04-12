@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Page-layout</title>
+</head>
+<body>
+    <!-- данные файл содержит фрагменты, описывающие компоненты верстки страницы (header, footer, e.t.c.) -->
+
+    <!-- фрагмент общего содержимого тега head -->
+    <th:block th:fragment="page-head">
+      <meta charset="UTF-8">
+      <title>Dental Clinic</title>
+      <!-- подключения локального bootstrap -->
+      <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+      <link rel = "stylesheet" th:href = "@{/css/style.css}">
+      <style>
+          body{
+              background-image: url("[[@{/image/background2.jpg}]]");
+              background-size: cover;
+              background-repeat: no-repeat;
+          }
+      </style>
+    </th:block>
+
+    <!-- фрагмент содержимого тега head для login-a -->
+    <th:block th:fragment="page-head-login">
+        <meta charset="UTF-8">
+        <title>Please sign in</title>
+        <!-- подключения локального bootstrap -->
+        <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    </th:block>
+
+    <!-- компонент шапки приложения -->
+    <header th:fragment="page-header">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light mb-1">
+        <div class="container-fluid">
+          <a class="navbar-brand" th:href="@{/}">Dental Clinic</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                  aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link" aria-current="page" th:classappend="${page == 'index'? 'active' : ''}" th:href="@{/}">Домашняя</a>
+              <a class="nav-link" th:href="@{/department}" th:classappend="${page == 'department'? 'active' : ''}">Отделения</a>
+              <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN','REGISTRAR')" class="nav-link" th:href="@{/visitTime}" th:classappend="${page == 'visitTime'? 'active' : ''}">Расписание</a>
+              <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN','REGISTRAR')" class="nav-link" th:href="@{/patient}" th:classappend="${page == 'patient'? 'active' : ''}">Пациенты</a>
+              <a sec:authorize="hasAnyRole('ADMIN','SUPER_ADMIN','REGISTRAR')" class="nav-link" th:href="@{/feedbackForm}" th:classappend="${page == 'feedback'? 'active' : ''}">Обратная связь</a>
+            </div>
+          </div>
+            <!-- кнопки аутентификации и авторизации и вывод информации о сессии пользователя-->
+            <span sec:authorize="isAuthenticated()">[[${#authentication.getPrincipal().getUsername()}]]</span>
+            </form>
+            <form sec:authorize="isAuthenticated()" class="d-flex" method="post" th:action="@{/logout}">
+                <button class="btn btn-outline-danger">Log Out</button>
+            </form>
+            </form>
+            <form sec:authorize="!isAuthenticated()" class="d-flex" method="get" th:action="@{/login}">
+                <button class="btn btn-outline-success">Log In</button>
+            </form>
+            <form sec:authorize="hasAnyRole('SUPER_ADMIN')" class="d-flex" method="get" th:action="@{/user/register}">
+                <button class="btn btn-outline-success">Register</button>
+            </form>
+        </div>
+      </nav>
+    </header>
+
+    <!-- фрагмент вывода сообщений dangerMessage/successMessage -->
+    <th:block th:fragment="page-message">
+      <!-- вывод сообщения success message -->
+      <p class="alert alert-success" th:if="${successMessage != null}">
+        [[${successMessage}]]
+      </p>
+
+      <!-- вывод сообщения danger message -->
+      <p class="alert alert-danger" th:if="${dangerMessage != null}">
+        [[${dangerMessage}]]
+      </p>
+    </th:block>
+
+    <!-- футер приложения -->
+    <footer th:fragment="page-footer" class="container-fluid text-center fixed-bottom text-bg-dark">
+        <h4>Выполнила Е.Ю. Чалова, 2023г. &copy;</h4>
+    </footer>
+</body>
+</html>
